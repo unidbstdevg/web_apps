@@ -7,3 +7,5 @@ RUN printf 'error_reporting = E_ALL \ndisplay_errors = On \ndisplay_startup_erro
 # enable htaccess file
 RUN sed -i 's/<Directory \/>/<Directory \/var\/www\/>/' \
         /etc/apache2/sites-available/000-default.conf
+
+ENV MYSQL_ADMIN_PASS=admin
