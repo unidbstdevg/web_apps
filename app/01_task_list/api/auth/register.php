@@ -1,10 +1,10 @@
 <?php
-require("../db_connect.php");
-
 if (!isset($_REQUEST["login"]) or !isset($_REQUEST["password"])) {
     http_response_code(400);
-    exit("missed some required arguments");
+    exit("Missed some required arguments");
 }
+
+require("../db_connect.php");
 
 $s = sprintf(
     "SELECT * FROM `users` WHERE `login` = '%s'",
@@ -14,7 +14,7 @@ $res = mysqli_query($con, $s);
 
 if ($res->num_rows > 0) {
     http_response_code(409);
-    exit("login already exist");
+    exit("Login already exist");
 }
 
 $s = sprintf(
@@ -23,3 +23,5 @@ $s = sprintf(
     $_REQUEST["password"]
 );
 mysqli_query($con, $s);
+
+print("Ok");

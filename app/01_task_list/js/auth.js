@@ -1,28 +1,18 @@
 window.addEventListener('load', function() {
+  // prevent form processing that results in page reload
   document.forms[0].addEventListener("submit", (ev) => {
     ev.preventDefault()
   });
 });
 
-function error_handling(http_status) {
+function error_handling(statuscode, text) {
   let e_alert = document.querySelector("#formAlert");
   e_alert.hidden = false;
 
-  switch (http_status) {
-    case 400:
-      e_alert.innerHTML = "Congratulations! You managed to leave the arguments empty, even though the browser validates the data before sending";
-      break;
-    case 401:
-      e_alert.innerHTML = "Wrong login/password";
-      break;
-    case 409:
-      e_alert.innerHTML = "Login already exist";
-      break;
-
-    default:
-      e_alert.innerHTML = "Something very bad happend on the server side. Please contact administators";
-      break;
-  }
+  if (text == "")
+    e_alert.innerHTML = "Error " + statuscode;
+  else
+    e_alert.innerHTML = text;
 }
 
 function sign_in() {
@@ -35,7 +25,7 @@ function sign_in() {
   if (request.status == 200)
     window.location.href = "list.html";
   else
-    error_handling(request.status);
+    error_handling(request.status, request.responseText);
 }
 
 function sign_up() {
@@ -48,7 +38,6 @@ function sign_up() {
   if (request.status == 200) {
     // hack: send login request to set session via php (and then redirect)
     sign_in();
-  }
-  else
-    error_handling(request.status);
+  } else
+    error_handling(request.status, request.responseText);
 }
