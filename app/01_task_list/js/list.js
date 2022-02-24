@@ -1,0 +1,50 @@
+window.addEventListener('load', function() {
+  document.forms[0].addEventListener("submit", (ev) => {
+    ev.preventDefault()
+  });
+
+  fetch_tasks(redraw_tasks);
+});
+
+function fetch_tasks(callback) {
+  var url = "api/tasks/list.php";
+  var request = new XMLHttpRequest();
+  request.open('POST', url, false);
+
+  request.send();
+
+  if (request.status == 200) {
+    let tasks = JSON.parse(request.responseText);
+    callback(tasks);
+  } else
+    alert("Error " + request.status + " on fetching tasks: " + request.responseText);
+}
+
+function redraw_tasks(tasks) {
+  let e_tasks_list = document.querySelector("#tasksList");
+  e_tasks_list.innerHTML = "";
+
+  for (t of tasks) {
+    let e_task = create_task_elem(t.name, t.id);
+    e_tasks_list.appendChild(e_task);
+    console.log(t);
+  }
+}
+
+function create_task_elem(task_name, task_id) {
+  let elem = document.createElement("tr");
+
+  {
+    let td = document.createElement("td");
+    td.innerText = task_name;
+    elem.appendChild(td);
+  }
+
+  {
+    let td = document.createElement("td");
+    td.innerHTML = "<button class='btn btn-danger' onclick='delete_task(" + task_id + ")'>Delete</button>";
+    elem.appendChild(td);
+  }
+
+  return elem;
+}
