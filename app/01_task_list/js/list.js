@@ -6,6 +6,22 @@ window.addEventListener('load', function() {
   fetch_tasks(redraw_tasks);
 });
 
+function add_task() {
+  let form = document.forms[0];
+
+  let url = "api/tasks/add.php";
+  let request = new XMLHttpRequest();
+  request.open('POST', url, false);
+
+  request.send(new FormData(form));
+
+  if (request.status == 200) {
+    fetch_tasks(redraw_tasks);
+    form.reset();
+  } else
+    alert("Error " + request.status + " on adding task: " + request.responseText);
+}
+
 function fetch_tasks(callback) {
   var url = "api/tasks/list.php";
   var request = new XMLHttpRequest();
