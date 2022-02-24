@@ -22,6 +22,21 @@ function add_task() {
     alert("Error " + request.status + " on adding task: " + request.responseText);
 }
 
+function delete_task(task_id) {
+  let url = "api/tasks/delete.php";
+  let request = new XMLHttpRequest();
+  request.open('POST', url, false);
+
+  let formData = new FormData();
+  formData.append("task_id", task_id);
+  request.send(formData);
+
+  if (request.status == 200) {
+    fetch_tasks(redraw_tasks);
+  } else
+    alert("Error " + request.status + " on adding task: " + request.responseText);
+}
+
 function fetch_tasks(callback) {
   var url = "api/tasks/list.php";
   var request = new XMLHttpRequest();
