@@ -21,6 +21,8 @@ function logout() {
 
 function add_task() {
   let form = document.forms[0];
+  if (!form.task_name.checkValidity())
+    return;
 
   let url = "api/tasks/add.php";
   let request = new XMLHttpRequest();
