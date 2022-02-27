@@ -1,0 +1,2 @@
+<?php
+$TASK_NAME_LEN_LIMIT = 50;
