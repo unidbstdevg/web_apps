@@ -6,6 +6,19 @@ window.addEventListener('load', function() {
   fetch_tasks(redraw_tasks);
 });
 
+function logout() {
+  let url = "api/auth/logout.php";
+  let request = new XMLHttpRequest();
+  request.open('POST', url, false);
+
+  request.send();
+
+  if (request.status == 200)
+    window.location.href = "auth.html";
+  else
+    alert("Error " + request.status + " on logout: " + request.responseText);
+}
+
 function add_task() {
   let form = document.forms[0];
 
