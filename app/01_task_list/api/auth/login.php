@@ -6,22 +6,21 @@ if (!isset($_REQUEST["login"]) or !isset($_REQUEST["password"])) {
 
 require("../db_connect.php");
 
-$s = sprintf(
-    "SELECT * FROM `users` WHERE `login` = '%s' AND `password` = '%s'",
-    $_REQUEST["login"],
-    $_REQUEST["password"]
-);
-$res = mysqli_query($con, $s);
-
-if ($res->num_rows <= 0) {
+$s = $con->prepare("SELECT id FROM users WHERE login = ? AND password = ?");
+$s->bind_param("ss", $_REQUEST["login"], $_REQUEST["password"]);
+if (!$s->execute()) {
+    http_response_code(500);
+    exit("sql error");
+}
+$res = $s->get_result();
+if ($res->num_rows != 1) {
     http_response_code(401);
     exit("Wrong login/password");
 }
 
-$user = mysqli_fetch_assoc($res);
+$user_id = $res->fetch_row()[0];
 
 session_start();
-$_SESSION["login"] = $user["login"];
-$_SESSION["user_id"] = $user["id"];
+$_SESSION["user_id"] = $user_id;
 
 print("Ok");
