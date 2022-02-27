@@ -32,7 +32,13 @@ function add_task() {
 
   if (request.status == 200) {
     fetch_tasks(redraw_tasks);
+
     form.reset();
+    // hack: prevent popup "field required" after reset
+    form.task_name.oninvalid = (ev) => {
+      ev.preventDefault();
+      ev.target.oninvalid = null;
+    };
   } else
     alert("Error " + request.status + " on adding task: " + request.responseText);
 }
