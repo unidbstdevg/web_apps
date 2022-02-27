@@ -16,11 +16,15 @@ function error_handling(statuscode, text) {
 }
 
 function sign_in() {
+  let form = document.forms[0];
+  if (!form.checkValidity())
+    return;
+
   var url = "api/auth/login.php";
   var request = new XMLHttpRequest();
   request.open('POST', url, false);
 
-  request.send(new FormData(document.forms[0]));
+  request.send(new FormData(form));
 
   if (request.status == 200)
     window.location.href = "list.html";
@@ -29,11 +33,15 @@ function sign_in() {
 }
 
 function sign_up() {
+  let form = document.forms[0];
+  if (!form.checkValidity())
+    return;
+
   var url = "api/auth/register.php";
   var request = new XMLHttpRequest();
   request.open('POST', url, false);
 
-  request.send(new FormData(document.forms[0]));
+  request.send(new FormData(form));
 
   if (request.status == 200) {
     // hack: send login request to set session via php (and then redirect)
