@@ -31,10 +31,10 @@ function delete_task(task_id) {
   formData.append("task_id", task_id);
   request.send(formData);
 
-  if (request.status == 200) {
+  if (request.status == 200)
     fetch_tasks(redraw_tasks);
-  } else
-    alert("Error " + request.status + " on adding task: " + request.responseText);
+  else
+    alert("Error " + request.status + " on deleting task: " + request.responseText);
 }
 
 function fetch_tasks(callback) {
@@ -47,7 +47,11 @@ function fetch_tasks(callback) {
   if (request.status == 200) {
     let tasks = JSON.parse(request.responseText);
     callback(tasks);
-  } else
+  } else if (request.status == 403) {
+    alert("Please auth first");
+    window.location.href = "auth.html";
+  }
+  else
     alert("Error " + request.status + " on fetching tasks: " + request.responseText);
 }
 
@@ -58,7 +62,6 @@ function redraw_tasks(tasks) {
   for (t of tasks) {
     let e_task = create_task_elem(t.name, t.id);
     e_tasks_list.appendChild(e_task);
-    console.log(t);
   }
 }
 
