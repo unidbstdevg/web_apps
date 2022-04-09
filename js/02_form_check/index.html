@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="styles.css" rel="stylesheet">
+    <script src="main.js"></script>
+</head>
+
+<body class="text-center">
+    <form action="javascript:f()">
+        <div>
+            <label for="login">Введите логин</label>
+            <input type="text" name="login" id="login" pattern="[a-z]+">
+            <div class="field_error" id="login_error" hidden>Логин должен быть не менее 6 символов</div>
+        </div>
+        <div>
+            <label for="password">Введите пароль</label>
+            <input type="password" name="password" id="password">
+            <label for="password2">Повторите пароль</label>
+            <input type="password" name="password2" id="password2">
+            <div class="field_error" id="password_error" hidden>Пароли не совпадают</div>
+        </div>
+        <div>
+            <label for="email">Введите почту</label>
+            <input type="email" name="email" id="email">
+            <div class="field_error" id="email_error" hidden>Почта должна быть домена @uni-dubna.ru</div>
+        </div>
+        <div>
+            <label for="mailing">
+                Подписаться на рассыллку
+                <input type="checkbox" name="mailing" id="mailing" onchange="mailing_change()" value="123" checked>
+            </label>
+        </div>
+        <div>
+            Пол
+            <label for="m"><input type="radio" name="gender" id="m" value="m">Мужской</label>
+            <label for="w"><input type="radio" name="gender" id="w" value="w">Женский</label>
+            <div class="field_error" id="gender_error" hidden>Пол не выбран</div>
+        </div>
+        <div>
+            <select name="city" id="city">
+                <option value="москва">Москва</option>
+                <option value="париж">Париж</option>
+                <option value="дубна">Дубна</option>
+                <option value="дмитров">Дмитров</option>
+            </select>
+            <div class="field_error" id="city_m_error" hidden>Для мужского пола доступные только города Дубна и
+                Димтров</div>
+            <div class="field_error" id="city_w_error" hidden>Для женского пола доступные только города Москва и Париж
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="отправить">
+            <input type="reset" value="сбросить">
+        </div>
+    </form>
+</body>
+
+</html>
