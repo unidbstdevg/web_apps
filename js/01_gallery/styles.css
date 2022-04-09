@@ -1,0 +1,12 @@
+.big-img {
+    height: 300px;
+}
+
+.small-img {
+    width: 150px;
+    margin-left: 10px;
+}
+
+.selected-img {
+    border: 1px solid red;
+}
