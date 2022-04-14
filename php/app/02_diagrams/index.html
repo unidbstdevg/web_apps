@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Diagrams</title>
+    <script src="main.js"></script>
+</head>
+
+<body>
+    <canvas width="1000px" height="500px" id="canv"></canvas>
+
+    <br>
+    <br>
+
+    <button onclick="btn_fetch_cells()">Fetch</button>
+
+    <br>
+    <br>
+
+    <form onsubmit="form_add_cell()">
+        <input name="cell_value" type="number" placeholder="Cell value" min=1 max=500 required>
+        <button type="submit">Add cell</button>
+    </form>
+</body>
+
+</html>
