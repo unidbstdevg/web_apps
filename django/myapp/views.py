@@ -11,4 +11,4 @@ def index(request):
         'todoList': todoList,
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'myapp/index.html', context)
