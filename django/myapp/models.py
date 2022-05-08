@@ -6,4 +6,6 @@ class Task(models.Model):
     desc = models.CharField(max_length=50)
 
 
-# Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+
