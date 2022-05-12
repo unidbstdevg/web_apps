@@ -9,11 +9,57 @@
 </head>
 
 <body>
-    {% if cities %}
-    {% for city in cities %}
-    {{ city.name }} with {{ city.population }} population <br>
-    {% endfor %}
-    {% else %}
-    Список дел пуст
-    {% endif %}
+    <canvas width="1000px" height="500px" id="canv"></canvas>
+    <br>
+
+    <div>
+        {% if cities %}
+        {% for city in cities %}
+        <label>
+            <input class="check_city" id="{{city.name}}" population="{{city.population}}" type="checkbox"
+                onclick="redraw()" />
+            {{city.name}} with {{city.population}}
+        </label> <br>
+        {% endfor %}
+        {% else %}
+        Список городов пуст
+        {% endif %}
+    </div>
+
+    <script>
+        function redraw() {
+            let list_to_draw = [];
+
+            let elems = document.getElementsByClassName("check_city");
+            for (const elem of elems) {
+                let population = elem.getAttribute("population");
+                let checked = elem.checked;
+                if (checked)
+                    list_to_draw.push(population);
+            }
+
+            redraw_list(list_to_draw);
+        }
+
+        function redraw_list(list) {
+            let cells_count = list.length;
+            let ctx = canv.getContext("2d");
+            ctx.reset();
+
+            const CANVAS_WIDTH = canv.width;
+            const CANVAS_HEIGHT = canv.height;
+
+            const RECT_WIDTH = CANVAS_WIDTH / cells_count;
+            const RECTS_GAP = 0;
+
+            let dx = 0;
+            for (const val of list) {
+                let height = val;
+
+                ctx.fillRect(dx, CANVAS_HEIGHT, RECT_WIDTH, -height);
+
+                dx += RECT_WIDTH + RECTS_GAP;
+            }
+        }
+    </script>
 </body>
