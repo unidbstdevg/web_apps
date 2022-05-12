@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import app_city.views as city_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('index/', city_views.index, name='index'),
 ]
