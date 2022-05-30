@@ -21,4 +21,8 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index, name='index'),
+    path('api/tasks/list', views.api_tasks_list),
+    path('api/tasks/add', views.api_tasks_add),
+    path('api/tasks/delete', views.api_tasks_delete),
+    path('api/tasks/edit', views.api_tasks_edit),
 ]

@@ -4,16 +4,197 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <title>List</title>
+    <script>
+        window.addEventListener("load", function () {
+            document.forms[0].addEventListener("submit", (ev) => {
+                ev.preventDefault();
+            });
+
+            fetch_tasks(redraw_tasks);
+        });
+
+        function add_task() {
+            let form = document.forms[0];
+            if (!form.checkValidity()) {
+                return;
+            }
+
+            let url = "/api/tasks/add";
+            let request = new XMLHttpRequest();
+            request.open("POST", url, false);
+
+            request.send(new FormData(form));
+
+            if (request.status == 200) {
+                fetch_tasks(redraw_tasks);
+
+                form.reset();
+                // hack: prevent popup "field required" after reset
+                form.task_name.oninvalid = (ev) => {
+                    ev.preventDefault();
+                    ev.target.oninvalid = null;
+                };
+            } else {
+                alert(
+                    "Error " + request.status + " on adding task: " +
+                    request.responseText,
+                );
+            }
+        }
+
+        function delete_task(task_id) {
+            let url = "/api/tasks/delete";
+            let request = new XMLHttpRequest();
+            request.open("POST", url, false);
+
+            let formData = new FormData();
+            formData.append("task_id", task_id);
+            request.send(formData);
+
+            if (request.status == 200) {
+                fetch_tasks(redraw_tasks);
+            } else {
+                alert(
+                    "Error " + request.status + " on deleting task: " +
+                    request.responseText,
+                );
+            }
+        }
+
+        function edit_task(elem, task_id) {
+            let original_name = elem.parentNode.parentNode.children[0].innerText;
+            let new_name = prompt("New task name:", original_name);
+
+            let url = "/api/tasks/edit";
+            let request = new XMLHttpRequest();
+            request.open("POST", url, false);
+
+            let formData = new FormData();
+            formData.append("task_id", task_id);
+            formData.append("new_task_name", new_name);
+            request.send(formData);
+
+            if (request.status == 200) {
+                fetch_tasks(redraw_tasks);
+            } else {
+                alert(
+                    "Error " + request.status + " on editing task: " +
+                    request.responseText,
+                );
+            }
+        }
+
+        function fetch_tasks(callback) {
+            var url = "/api/tasks/list";
+            var request = new XMLHttpRequest();
+            request.open("POST", url, false);
+
+            request.send();
+
+            if (request.status == 200) {
+                let tasks = JSON.parse(request.responseText);
+                callback(tasks);
+            } else {
+                alert(
+                    "Error " + request.status + " on fetching tasks: " +
+                    request.responseText,
+                );
+            }
+        }
+
+        function redraw_tasks(tasks) {
+            let e_tasks_list = document.querySelector("#tasksList");
+            e_tasks_list.innerHTML = "";
+
+            for (t of tasks) {
+                let e_task = create_task_elem(t.name, t.id);
+                e_tasks_list.appendChild(e_task);
+            }
+        }
+
+        function create_task_elem(task_name, task_id) {
+            let elem = document.createElement("tr");
+
+            {
+                let td = document.createElement("td");
+                td.innerText = task_name;
+                elem.appendChild(td);
+            }
+
+            {
+                let td = document.createElement("td");
+                td.className = "d-flex";
+                td.innerHTML +=
+                    "<button class='btn btn-sm btn-success me-1' onclick='edit_task(this, " +
+                    task_id + ")'>Edit</button>";
+                td.innerHTML +=
+                    "<button class='btn btn-sm btn-danger' onclick='delete_task(" +
+                    task_id + ")'>Delete</button>";
+                elem.appendChild(td);
+            }
+
+            return elem;
+        }
+    </script>
 </head>
 
 <body>
-    {% if todoList %}
-    {% for task in todoList %}
-    {{ task.title }} <br>
-    {% endfor %}
-    {% else %}
-    Список дел пуст
-    {% endif %}
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-lg-9 col-xl-7">
+                    <div class="card rounded-3">
+                        <div class="card-body p-4">
+
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                    onclick="logout()">Logout</button>
+                            </div>
+
+                            <h4 class="text-center my-3 pb-3">To Do List</h4>
+
+                            <form autocomplete="off"
+                                class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <input name="task_name" type="text" class="form-control" placeholder="Task name"
+                                            minlength="3" maxlength="50" size="40" required autofocus>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <button type="submit" class="btn btn-primary" onclick="add_task()">Add</button>
+                                </div>
+                            </form>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="w-100">Task</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tasksList">
+                                    <tr>
+                                        <td>Example task name</td>
+                                        <td class="d-flex">
+                                            <button class="btn btn-sm btn-success me-1">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
+
+</html>
